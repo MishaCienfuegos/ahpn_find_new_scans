@@ -20,10 +20,10 @@ output_dir = args.o
 
 """
 Takes a file path.
-Returns a list with its md5 hash value and file size (bytes).
+Returns a list with its sha256 hash value and file size (bytes).
 """
 def hash_file(file_path):
-    hash = hashlib.md5()
+    hash = hashlib.sha256()
     buffer_size = 65536
     hash_value = ''
 
@@ -56,9 +56,11 @@ def get_files_hash_values(root_dir):
             hash_path_dict = {}
 
             abs_path = os.path.abspath(os.path.join(root, file))
+            rel_path = os.path.relpath(os.path.join(root, file))
             hash_value = hash_file(abs_path)
 
             hash_path_dict['file'] = file
+            hash_path_dict['relpath'] = rel_path
             hash_path_dict['path'] = abs_path
             hash_path_dict['hash'] = hash_value[0]
             hash_path_dict['file_size'] = hash_value[1]
