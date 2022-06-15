@@ -11,7 +11,6 @@ existing_manifest_csv_path = 'test_files/2_1_2018.csv'
 new_files_dir = '../../../../../ahpn/misha_test/ahpn_2019/2/2'
 # new_calculated_hashes = 'test_files/ahpn-misha_test-2-2-hash_values.csv'
 
-# TODO should be at least 1 matched file for 2_1_2018.csv
 new_manifest_list = [
   {'file': '17427196.tif', 'path': '2/1/17427196.tif', 'hash': 'ea756afc8bb793d9dda6b6ef8086c62f2065a295c59bc95680eed5d53d6b4c68', 'file_size': 50545},
   {'file': '17427197.tif', 'path': '2/1/17427197.tif', 'hash': 'b3f35eda4bbbf5ed40adbba4104e584969c16332df846a2f289dcad6f5380898', 'file_size': 131168},
@@ -20,6 +19,7 @@ new_manifest_list = [
   {'file': '17427200.tif', 'path': '2/1/17427200.tif', 'hash': '4bdf0fe0cc6a870d793768a6c5d624c927cb07e97bb9cf231f42085a67914e93', 'file_size': 156391},
   {'file': '10014110.tif', 'path': '2/1/10014110.tif', 'hash': '80fb9ac2daf2cf5c7ee59b6fd5d423641eab110da771a9c3c39722a316d62abe', 'file_size': 183623},
   {'file': '17427201.tif', 'path': '2/1/17427201.tif', 'hash': '56e716a99e86444d88545a2ca3ee7fbff4d515727d5aba0f75a66fb89b592286', 'file_size': 99158},
+  {'file': 'bogus.tif', 'path': '2/1/bogus.tif', 'hash': 'fakefakefakefakefakefakefakefakefakefake9b592286', 'file_size': 99158},
   {'file': '17427863.tif', 'path': '2/1/17427863.tif', 'hash': 'ba918760d29b63a8cdb37fde90c9b6dae91393ea525a3ef06beb8522b73d10fc', 'file_size': 17172},
   {'file': '17470374.tif', 'path': '2/1/17470374.tif', 'hash': 'd791fb8a28f886dae9781b689b1c66ba064b7a81db225d896c0cd4a718a3ee15', 'file_size': 115478},
   {'file': '17470375.tif', 'path': '2/1/17470375.tif', 'hash': '79aa184189b9ac2b5401a32f9522e6bc6cf766d04e649467e0e8892f79087b31', 'file_size': 124963},
@@ -117,7 +117,7 @@ def find_matches(list_1, list_2):
           
           matches.append(match)
 
-      return matches
+  return matches
 
 def write_list_to_csv(copy_list):
   timestamp = time.strftime("%Y%m%d-%H%M%S")
@@ -146,5 +146,7 @@ existing_manifest_list = unixify_existing_manifest(existing_manifest_csv_path)
 # copy_list = find_new_assets.find_new_assets(existing_manifest_list, new_manifest_list)
 copy_list = find_matches(existing_manifest_list, new_manifest_list)
 print('copy list:', copy_list)
+print('new manifest list length:', len(new_manifest_list))
+print('copy list length:', len(copy_list))
 
 # write_list_to_csv(copy_list)
