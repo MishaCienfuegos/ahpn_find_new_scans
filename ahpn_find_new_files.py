@@ -8,7 +8,7 @@ import re
 import time
 
 existing_manifest_csv_path = 'test_files/2_1_2018.csv'
-new_files_dir = '../../../../../ahpn/misha_test/ahpn_2019/2/2'
+new_files_dir = '../../../../../ahpn/misha_test/ahpn_2019/2/1'
 # new_calculated_hashes = 'test_files/ahpn-misha_test-2-2-hash_values.csv'
 
 new_manifest_list = [
@@ -136,17 +136,27 @@ def write_list_to_csv(copy_list):
         out_row = [row['path'], row['hash']]
         writer.writerow(out_row)
 
+# Step 1:
 # Change existing manifest file paths to unix format
+# and make convert csv to list
 existing_manifest_list = unixify_existing_manifest(existing_manifest_csv_path)
 
-# Calculate hash values for new files
+# Step 2:
+# Calculate hash values for new files and create a list
+# TODO write this to csv for safekeeping
 # new_manifest_list = calculate_new_manifest(new_files_dir)
 # print('new manifest:', new_manifest_list[0].get('hash'))
 
+# Step 3:
+# Find matches between new_manifest_list and existing_manifest_list
 # copy_list = find_new_assets.find_new_assets(existing_manifest_list, new_manifest_list)
-copy_list = find_matches(existing_manifest_list, new_manifest_list)
-print('copy list:', copy_list)
+match_list = find_matches(existing_manifest_list, new_manifest_list)
+print('copy list:', match_list)
 print('new manifest list length:', len(new_manifest_list))
-print('copy list length:', len(copy_list))
+print('copy list length:', len(match_list))
 
-# write_list_to_csv(copy_list)
+# Step 4:
+# Subtract match_list from new_manifest_list
+# This is the 
+
+write_list_to_csv(match_list)
