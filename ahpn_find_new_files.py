@@ -95,7 +95,6 @@ def calculate_new_manifest(new_files_root_dir):
 
   return new_manifest_list
 
-# Take 2
 # Find matches, then subtract list of matches from new files list
 def find_matches(list_1, list_2):
   matches = []
@@ -113,18 +112,31 @@ def find_matches(list_1, list_2):
 
       # If match found, create match list and append match to matches list
       if hash_1 == hash_2:
-          match = [hash_1, path_1, path_2, file_name_2]
+          match = {
+            'hash': hash_1, 
+            'existing_path': path_1,
+            'path': path_2, 
+            'file': file_name_2
+          }
           
           matches.append(match)
 
   return matches
 
-def write_list_to_csv(copy_list):
+def subtract_lists(list_1, list_2):
+  copy_list = []
+
+  for item in list_1:
+    print('list 1 structure:', list_1[0])
+
+# Takes a list
+# Writes path and hash to csv, as well as 
+def write_list_to_csv(list):
   timestamp = time.strftime("%Y%m%d-%H%M%S")
-  output_file_name = 'aphn-copy-list-' + timestamp + '.csv'
+  output_file_name = 'aphn-' + timestamp + '.csv'
 
   # If no matches found, do not write csv, return message
-  if len(copy_list) <= 0:
+  if len(list) <= 0:
     print('No unmatched files to copy.')
 
   # Else, write each match to a csv row
@@ -132,31 +144,51 @@ def write_list_to_csv(copy_list):
     with open(output_file_name, 'a', newline='', encoding='utf-8') as output_csv:
       writer = csv.writer(output_csv, quotechar='"', delimiter=',')
         
-      for row in copy_list:
-        out_row = [row['path'], row['hash']]
+      for row in list:
+        out_row = [row['hash'], row['path']]
+        if 'file' in row:
+          out_row.append(row['file'])
+        if 'file_size' in row:
+          out_row.append(row['file_size'])
         writer.writerow(out_row)
 
 # Step 1:
-# Change existing manifest file paths to unix format
+# Change existing manifest file's paths to unix format
 # and make convert csv to list
 existing_manifest_list = unixify_existing_manifest(existing_manifest_csv_path)
 
 # Step 2:
 # Calculate hash values for new files and create a list
-# TODO write this to csv for safekeeping
+# TODO this step is long on my local machine; use dummy data above for simple testing
 # new_manifest_list = calculate_new_manifest(new_files_dir)
-# print('new manifest:', new_manifest_list[0].get('hash'))
+
+# Step 2b:
+# Write new_manifest_list to csv for future reference
+write_list_to_csv(new_manifest_list)
+print('new manifest list', new_manifest_list[0])
 
 # Step 3:
 # Find matches between new_manifest_list and existing_manifest_list
-# copy_list = find_new_assets.find_new_assets(existing_manifest_list, new_manifest_list)
 match_list = find_matches(existing_manifest_list, new_manifest_list)
-print('copy list:', match_list)
-print('new manifest list length:', len(new_manifest_list))
-print('copy list length:', len(match_list))
+print('match list:', match_list[0])
+if match_list:
+  write_list_to_csv(match_list)
+
+# TODO this is for testing; copy list should equal length difference for "real" data
+new_manifest_length = len(new_manifest_list)
+match_list_length = len(match_list)
+list_difference = new_manifest_length - match_list_length
+print('new manifest list length:', new_manifest_length)
+print('match list length:', match_list_length)
+print('difference:', list_difference)
 
 # Step 4:
 # Subtract match_list from new_manifest_list
-# This is the 
+copy_list = subtract_lists(new_manifest_list, existing_manifest_list)
+print('copy list:', copy_list)
+if copy_list:
+  write_list_to_csv(copy_list)
 
-write_list_to_csv(match_list)
+# Step 5:
+# Write copy_list (files not found in existing list) to csv
+# write_list_to_csv(copy_list)
