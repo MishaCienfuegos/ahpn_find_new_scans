@@ -123,11 +123,34 @@ def find_matches(list_1, list_2):
 
   return matches
 
+# TODO try list comprehension method
 def subtract_lists(list_1, list_2):
-  copy_list = []
+  copy_list = list_1
+  list_2_hashes = [item['hash'] for item in list_2]
 
-  for item in list_1:
-    print('list 1 structure:', list_1[0])
+  copy_list[:] = [item for item in copy_list if item.get('hash') not in list_2_hashes]
+  print('copy list:', copy_list)
+
+  return copy_list
+
+# Remove dictionaries from list_1 (new manifest)
+# where a dictionary with the same hash exists in list_2
+# TODO oh no, did the same thing twice D:
+# def subtract_lists(list_1, list_2):
+#   copy_list = list_1
+
+#   for row_1 in list_1:
+#     list_1_hash = row_1['hash']
+
+#     for row_2 in list_2:
+#       list_2_hash = row_2['hash']
+
+#       if list_1_hash == list_2_hash:
+#         print('Eureka!')
+#         copy_list.append(row_1)
+#         break
+
+#   return copy_list
 
 # Takes a list
 # Writes path and hash to csv, as well as 
@@ -178,6 +201,7 @@ if match_list:
 new_manifest_length = len(new_manifest_list)
 match_list_length = len(match_list)
 list_difference = new_manifest_length - match_list_length
+
 print('new manifest list length:', new_manifest_length)
 print('match list length:', match_list_length)
 print('difference:', list_difference)
@@ -185,8 +209,10 @@ print('difference:', list_difference)
 # Step 4:
 # Subtract match_list from new_manifest_list
 copy_list = subtract_lists(new_manifest_list, existing_manifest_list)
-print('copy list:', copy_list)
+print('copy list:', copy_list[0])
+
 if copy_list:
+  print('copy list length:', len(copy_list))
   write_list_to_csv(copy_list)
 
 # Step 5:
