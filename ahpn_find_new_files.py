@@ -20,6 +20,7 @@ new_manifest_list = [
   {'file': '10014110.tif', 'path': '2/1/10014110.tif', 'hash': '80fb9ac2daf2cf5c7ee59b6fd5d423641eab110da771a9c3c39722a316d62abe', 'file_size': 183623},
   {'file': '17427201.tif', 'path': '2/1/17427201.tif', 'hash': '56e716a99e86444d88545a2ca3ee7fbff4d515727d5aba0f75a66fb89b592286', 'file_size': 99158},
   {'file': 'bogus.tif', 'path': '2/1/bogus.tif', 'hash': 'fakefakefakefakefakefakefakefakefakefake9b592286', 'file_size': 99158},
+  {'file': 'bogus.tif', 'path': '2/1/extra-bogus.tif', 'hash': '56e716a99e86444d88545a2ca3ee7fbff4d515727d5aba0f75a66fb89b592286', 'file_size': 99158},
   {'file': '17427863.tif', 'path': '2/1/17427863.tif', 'hash': 'ba918760d29b63a8cdb37fde90c9b6dae91393ea525a3ef06beb8522b73d10fc', 'file_size': 17172},
   {'file': '17470374.tif', 'path': '2/1/17470374.tif', 'hash': 'd791fb8a28f886dae9781b689b1c66ba064b7a81db225d896c0cd4a718a3ee15', 'file_size': 115478},
   {'file': '17470375.tif', 'path': '2/1/17470375.tif', 'hash': '79aa184189b9ac2b5401a32f9522e6bc6cf766d04e649467e0e8892f79087b31', 'file_size': 124963},
@@ -111,7 +112,10 @@ def find_matches(list_1, list_2):
       file_name_2 = row['file']
 
       # If match found, create match list and append match to matches list
+      # TODO if file path is different, it is not considered a match and new version should be copied
+      # TODO clean up path_1 and path_2 names
       if hash_1 == hash_2:
+        if path_1 == path_2:
           match = {
             'hash': hash_1, 
             'existing_path': path_1,
@@ -124,12 +128,13 @@ def find_matches(list_1, list_2):
   return matches
 
 # TODO try list comprehension method
-def subtract_lists(list_1, list_2):
-  copy_list = list_1
-  list_2_hashes = [item['hash'] for item in list_2]
+def subtract_lists(new_manifest_list, match_list):
+  copy_list = new_manifest_list
+  match_hashes = [item['hash'] for item in match_list]
+  match_paths = [item['path'] for item in match_list]
 
-  copy_list[:] = [item for item in copy_list if item.get('hash') not in list_2_hashes]
-  print('copy list:', copy_list)
+  # TODO if hash is same and file path is different, keep in copy list
+  copy_list = [item for item in copy_list if item.get('path') not in match_paths or item.get('hash') not in match_hashes]
 
   return copy_list
 
@@ -209,7 +214,6 @@ print('difference:', list_difference)
 # Step 4:
 # Subtract match_list from new_manifest_list
 copy_list = subtract_lists(new_manifest_list, existing_manifest_list)
-print('copy list:', copy_list[0])
 
 if copy_list:
   print('copy list length:', len(copy_list))
