@@ -1,15 +1,13 @@
 import argparse
-# from get_files_hash_values import get_files_hash_values
-# import find_new_assets
 import csv
 import hashlib
 import os
 import re
+from sysconfig import get_path
 import time
 
 existing_manifest_csv_path = 'test_files/2_1_2018.csv'
 new_files_dir = '../../../../../ahpn/misha_test/ahpn_2019/2/1'
-# new_calculated_hashes = 'test_files/ahpn-misha_test-2-2-hash_values.csv'
 
 new_manifest_list = [
   {'file': '17427196.tif', 'path': '2/1/17427196.tif', 'hash': 'ea756afc8bb793d9dda6b6ef8086c62f2065a295c59bc95680eed5d53d6b4c68', 'file_size': 50545},
@@ -25,8 +23,8 @@ new_manifest_list = [
   {'file': '17470374.tif', 'path': '2/1/17470374.tif', 'hash': 'd791fb8a28f886dae9781b689b1c66ba064b7a81db225d896c0cd4a718a3ee15', 'file_size': 115478},
   {'file': '17470375.tif', 'path': '2/1/17470375.tif', 'hash': '79aa184189b9ac2b5401a32f9522e6bc6cf766d04e649467e0e8892f79087b31', 'file_size': 124963},
   {'file': '17470376.tif', 'path': '2/1/17470376.tif', 'hash': '991643e3c890962c2dd7b7ab52fb7e2ba24ae4158e431c13035998ad437400dd', 'file_size': 1246816},
-  {'file': '11193087.tif', 'path': '2/1/11193087.tif', 'hash': 'ea411a0f9529b173d0ecd719782f7a93d323d8bc061c6cb84326c22ca5d7273a', 'file_size': 34120},
-  {'file': '11194577.tif', 'path': '2/1/11194577.tif', 'hash': '5a26bcda9b9029b2e9080feeab708ddbf90b752fe61ec1079b92769cca2bef98', 'file_size': 32518}
+  {'file': '11193087.tif', 'path': '/mnt/ahpn/misha_test/ahpn_2019/2/1/11193087.tif', 'hash': 'ea411a0f9529b173d0ecd719782f7a93d323d8bc061c6cb84326c22ca5d7273a', 'file_size': 34120},
+  {'file': '11194577.tif', 'path': '/mnt/ahpn/misha_test/ahpn_2019/2/1/11194577.tif', 'hash': '5a26bcda9b9029b2e9080feeab708ddbf90b752fe61ec1079b92769cca2bef98', 'file_size': 32518}
 ]
 
 # Takes file path to existing manifest csv
@@ -48,6 +46,14 @@ def unixify_existing_manifest(existing_manifest_path):
       manifest_list.append(row_dict)
 
     return manifest_list
+
+# Gets the top-level directory from provided path (string)
+def get_path_root(path):
+  # after ',' through the first '/'
+  regex = '\w*/'
+  path_start = re.search(regex, path)
+
+  return path_start.group()
 
 # This is a rip-off of functions from calculate_hash_values repo.
 # Modifications: Returns list of lists, not csv.
@@ -74,11 +80,14 @@ def hash_file(file_path):
 
 # Takes file path to new files directory (2019 disk)
 # Run get file hash values
+# Uses existing manifest path to determine root of new manifest path (so they're comparable)
 # Returns list of dictionaries with file name, its absolute path, sha-256 hash value, and file size
-def calculate_new_manifest(new_files_root_dir):
+def calculate_new_manifest(new_files_root_dir, existing_manifest_list):
   print('Calculating new manifest for', new_files_root_dir)
 
   new_manifest_list = []
+  existing_path_example = existing_manifest_list[3]['path']
+  existing_path_root = get_path_root(existing_path_example)
 
   for root, dirs, files in os.walk(new_files_root_dir):
     for file in files:
@@ -86,11 +95,15 @@ def calculate_new_manifest(new_files_root_dir):
 
       rel_path = os.path.relpath(os.path.join(root, file))
       abs_path = os.path.abspath(os.path.join(root, file))
+
+      # Split new manifest relative path on the root of the existing manifest path
+      split_path = re.split(existing_path_root, rel_path)
+      path = existing_path_root + split_path[1]
       hash_value = hash_file(abs_path)
 
       hash_path_dict['file'] = file
       hash_path_dict['rel_path'] = rel_path
-      hash_path_dict['path'] = abs_path
+      hash_path_dict['path'] = path
       hash_path_dict['hash'] = hash_value[0]
       hash_path_dict['file_size'] = hash_value[1]
 
@@ -107,11 +120,18 @@ def find_matches(existing_manifest_list, new_manifest_list):
     hash_1 = row['hash']
     path_1 = row['path']
 
+    # Get the top-level directory for the existing path
+    existing_path_root = get_path_root(path_1)
+
     # Compare to each row in the csv_2 list
     for row in new_manifest_list:
       hash_2 = row['hash']
-      path_2 = row['path']
+      full_path_2 = row['path']
       file_name_2 = row['file']
+
+      # Modify the new manifest file path to same level as existing path
+      split_path_2 = re.split(existing_path_root, full_path_2)
+      path_2 = existing_path_root + split_path_2[1]
 
       # If match found, create match list and append match to matches list
       # TODO if file path is different, it is not considered a match and new version should be copied
@@ -139,25 +159,6 @@ def subtract_lists(new_manifest_list, match_list):
   # copy_list[:] = [item for item in copy_list if item.get('path') not in match_paths or item.get('hash') not in match_hashes]
   copy_list[:] = [item for item in copy_list if item.get('hash') not in match_hashes]
   return copy_list
-
-# Remove dictionaries from list_1 (new manifest)
-# where a dictionary with the same hash exists in list_2
-# TODO oh no, did the same thing twice D:
-# def subtract_lists(list_1, list_2):
-#   copy_list = list_1
-
-#   for row_1 in list_1:
-#     list_1_hash = row_1['hash']
-
-#     for row_2 in list_2:
-#       list_2_hash = row_2['hash']
-
-#       if list_1_hash == list_2_hash:
-#         print('Eureka!')
-#         copy_list.append(row_1)
-#         break
-
-#   return copy_list
 
 # Takes a list and a string to use in a descriptive name for the output csv
 # Writes path and hash to csv, as well as file name and size, if available
@@ -192,19 +193,19 @@ existing_manifest_list = unixify_existing_manifest(existing_manifest_csv_path)
 # Step 2:
 # Calculate hash values for new files and create a list
 # TODO this step is long on my local machine; use dummy data above for simple testing
-new_manifest_list = calculate_new_manifest(new_files_dir)
+# new_manifest_list = calculate_new_manifest(new_files_dir, existing_manifest_list)
 
 # Step 2b:
 # Write new_manifest_list to csv for future reference
-write_list_to_csv(new_manifest_list, 'new_manifest_list')
-print('new manifest list', new_manifest_list[0])
+# write_list_to_csv(new_manifest_list, 'new_manifest_list')
+# print('new manifest list', new_manifest_list[0])
 
 # Step 3:
 # Find matches between new_manifest_list and existing_manifest_list
-# match_list = find_matches(existing_manifest_list, new_manifest_list)
-# if match_list:
-#   print('match list:', match_list[0])
-#   write_list_to_csv(match_list, 'match_list')
+match_list = find_matches(existing_manifest_list, new_manifest_list)
+if match_list:
+  print('match list:', match_list[0])
+  write_list_to_csv(match_list, 'match_list')
 
 # TODO this is for testing; copy list should equal length difference for "real" data
 new_manifest_length = len(new_manifest_list)
