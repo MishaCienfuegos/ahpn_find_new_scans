@@ -9,23 +9,23 @@ import time
 existing_manifest_csv_path = 'test_files/2_1_2018.csv'
 new_files_dir = '../../../../../ahpn/misha_test/ahpn_2019/2/1'
 
-new_manifest_list = [
-  {'file': '17427196.tif', 'path': '2/1/17427196.tif', 'hash': 'ea756afc8bb793d9dda6b6ef8086c62f2065a295c59bc95680eed5d53d6b4c68', 'file_size': 50545},
-  {'file': '17427197.tif', 'path': '2/1/17427197.tif', 'hash': 'b3f35eda4bbbf5ed40adbba4104e584969c16332df846a2f289dcad6f5380898', 'file_size': 131168},
-  {'file': '17427198.tif', 'path': '2/1/17427198.tif', 'hash': '3e4f7e27c5742dbbc55bf019a827409f9bbb2cec556ddfc923e4d293d480e88c', 'file_size': 154177},
-  {'file': '17427199.tif', 'path': '2/1/17427199.tif', 'hash': '24b30fc3fcdadf9e0bb36e6be3e2084ab35e7ec140110395d4c88b575bed3329', 'file_size': 68948},
-  {'file': '17427200.tif', 'path': '2/1/17427200.tif', 'hash': '4bdf0fe0cc6a870d793768a6c5d624c927cb07e97bb9cf231f42085a67914e93', 'file_size': 156391},
-  {'file': '10014110.tif', 'path': '2/1/10014110.tif', 'hash': '80fb9ac2daf2cf5c7ee59b6fd5d423641eab110da771a9c3c39722a316d62abe', 'file_size': 183623},
-  {'file': '17427201.tif', 'path': '2/1/17427201.tif', 'hash': '56e716a99e86444d88545a2ca3ee7fbff4d515727d5aba0f75a66fb89b592286', 'file_size': 99158},
-  {'file': 'bogus.tif', 'path': '2/1/bogus.tif', 'hash': 'fakefakefakefakefakefakefakefakefakefake9b592286', 'file_size': 99158},
-  {'file': 'bogus.tif', 'path': '2/1/extra-bogus.tif', 'hash': '56e716a99e86444d88545a2ca3ee7fbff4d515727d5aba0f75a66fb89b592286', 'file_size': 99158},
-  {'file': '17427863.tif', 'path': '2/1/17427863.tif', 'hash': 'ba918760d29b63a8cdb37fde90c9b6dae91393ea525a3ef06beb8522b73d10fc', 'file_size': 17172},
-  {'file': '17470374.tif', 'path': '2/1/17470374.tif', 'hash': 'd791fb8a28f886dae9781b689b1c66ba064b7a81db225d896c0cd4a718a3ee15', 'file_size': 115478},
-  {'file': '17470375.tif', 'path': '2/1/17470375.tif', 'hash': '79aa184189b9ac2b5401a32f9522e6bc6cf766d04e649467e0e8892f79087b31', 'file_size': 124963},
-  {'file': '17470376.tif', 'path': '2/1/17470376.tif', 'hash': '991643e3c890962c2dd7b7ab52fb7e2ba24ae4158e431c13035998ad437400dd', 'file_size': 1246816},
-  {'file': '11193087.tif', 'path': '/mnt/ahpn/misha_test/ahpn_2019/2/1/11193087.tif', 'hash': 'ea411a0f9529b173d0ecd719782f7a93d323d8bc061c6cb84326c22ca5d7273a', 'file_size': 34120},
-  {'file': '11194577.tif', 'path': '/mnt/ahpn/misha_test/ahpn_2019/2/1/11194577.tif', 'hash': '5a26bcda9b9029b2e9080feeab708ddbf90b752fe61ec1079b92769cca2bef98', 'file_size': 32518}
-]
+# new_manifest_list = [
+#   {'file': '17427196.tif', 'path': '2/1/17427196.tif', 'hash': 'ea756afc8bb793d9dda6b6ef8086c62f2065a295c59bc95680eed5d53d6b4c68', 'file_size': 50545},
+#   {'file': '17427197.tif', 'path': '2/1/17427197.tif', 'hash': 'b3f35eda4bbbf5ed40adbba4104e584969c16332df846a2f289dcad6f5380898', 'file_size': 131168},
+#   {'file': '17427198.tif', 'path': '2/1/17427198.tif', 'hash': '3e4f7e27c5742dbbc55bf019a827409f9bbb2cec556ddfc923e4d293d480e88c', 'file_size': 154177},
+#   {'file': '17427199.tif', 'path': '2/1/17427199.tif', 'hash': '24b30fc3fcdadf9e0bb36e6be3e2084ab35e7ec140110395d4c88b575bed3329', 'file_size': 68948},
+#   {'file': '17427200.tif', 'path': '2/1/17427200.tif', 'hash': '4bdf0fe0cc6a870d793768a6c5d624c927cb07e97bb9cf231f42085a67914e93', 'file_size': 156391},
+#   {'file': '10014110.tif', 'path': '2/1/10014110.tif', 'hash': '80fb9ac2daf2cf5c7ee59b6fd5d423641eab110da771a9c3c39722a316d62abe', 'file_size': 183623},
+#   {'file': '17427201.tif', 'path': '2/1/17427201.tif', 'hash': '56e716a99e86444d88545a2ca3ee7fbff4d515727d5aba0f75a66fb89b592286', 'file_size': 99158},
+#   {'file': 'bogus.tif', 'path': '2/1/bogus.tif', 'hash': 'fakefakefakefakefakefakefakefakefakefake9b592286', 'file_size': 99158},
+#   {'file': 'bogus.tif', 'path': '2/1/extra-bogus.tif', 'hash': '56e716a99e86444d88545a2ca3ee7fbff4d515727d5aba0f75a66fb89b592286', 'file_size': 99158},
+#   {'file': '17427863.tif', 'path': '2/1/17427863.tif', 'hash': 'ba918760d29b63a8cdb37fde90c9b6dae91393ea525a3ef06beb8522b73d10fc', 'file_size': 17172},
+#   {'file': '17470374.tif', 'path': '2/1/17470374.tif', 'hash': 'd791fb8a28f886dae9781b689b1c66ba064b7a81db225d896c0cd4a718a3ee15', 'file_size': 115478},
+#   {'file': '17470375.tif', 'path': '2/1/17470375.tif', 'hash': '79aa184189b9ac2b5401a32f9522e6bc6cf766d04e649467e0e8892f79087b31', 'file_size': 124963},
+#   {'file': '17470376.tif', 'path': '2/1/17470376.tif', 'hash': '991643e3c890962c2dd7b7ab52fb7e2ba24ae4158e431c13035998ad437400dd', 'file_size': 1246816},
+#   {'file': '11193087.tif', 'path': '/mnt/ahpn/misha_test/ahpn_2019/2/1/11193087.tif', 'hash': 'ea411a0f9529b173d0ecd719782f7a93d323d8bc061c6cb84326c22ca5d7273a', 'file_size': 34120},
+#   {'file': '11194577.tif', 'path': '/mnt/ahpn/misha_test/ahpn_2019/2/1/11194577.tif', 'hash': '5a26bcda9b9029b2e9080feeab708ddbf90b752fe61ec1079b92769cca2bef98', 'file_size': 32518}
+# ]
 
 # Takes file path to existing manifest csv
 # Converts Windows file paths to Unix style
@@ -97,8 +97,10 @@ def calculate_new_manifest(new_files_root_dir, existing_manifest_list):
       abs_path = os.path.abspath(os.path.join(root, file))
 
       # Split new manifest relative path on the root of the existing manifest path
+      # Concatenate path root to back half of full path
       split_path = re.split(existing_path_root, rel_path)
       path = existing_path_root + split_path[1]
+
       hash_value = hash_file(abs_path)
 
       hash_path_dict['file'] = file
@@ -120,15 +122,17 @@ def find_matches(existing_manifest_list, new_manifest_list):
     hash_1 = row['hash']
     path_1 = row['path']
 
+    # TODO this shouldn't be necessary if the new manifest from calculate_new_manifest has the correct path now
     # Get the top-level directory for the existing path
     existing_path_root = get_path_root(path_1)
 
-    # Compare to each row in the csv_2 list
+    # Compare to each row in new_manifest_list
     for row in new_manifest_list:
       hash_2 = row['hash']
       full_path_2 = row['path']
       file_name_2 = row['file']
 
+      # TODO this shouldn't be necessary if the new manifest from calculate_new_manifest has the correct path now
       # Modify the new manifest file path to same level as existing path
       split_path_2 = re.split(existing_path_root, full_path_2)
       path_2 = existing_path_root + split_path_2[1]
@@ -193,12 +197,12 @@ existing_manifest_list = unixify_existing_manifest(existing_manifest_csv_path)
 # Step 2:
 # Calculate hash values for new files and create a list
 # TODO this step is long on my local machine; use dummy data above for simple testing
-# new_manifest_list = calculate_new_manifest(new_files_dir, existing_manifest_list)
+new_manifest_list = calculate_new_manifest(new_files_dir, existing_manifest_list)
 
 # Step 2b:
 # Write new_manifest_list to csv for future reference
-# write_list_to_csv(new_manifest_list, 'new_manifest_list')
-# print('new manifest list', new_manifest_list[0])
+write_list_to_csv(new_manifest_list, 'new_manifest_list')
+print('new manifest list', new_manifest_list[0])
 
 # Step 3:
 # Find matches between new_manifest_list and existing_manifest_list
