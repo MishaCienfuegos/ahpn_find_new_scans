@@ -6,6 +6,8 @@ import re
 from sysconfig import get_path
 import time
 
+# TODO add args, not hardcoded file paths
+
 # File path to manifest (.csv) for materials already written to tape
 existing_manifest_csv_path = 'test_files/2_1_2018.csv'
 
@@ -30,6 +32,10 @@ new_files_dir = '../../../../../ahpn/misha_test/ahpn_2019/2/1'
 #   {'file': '11193087.tif', 'rel_path': 'dummy_path', 'path': '/mnt/ahpn/misha_test/ahpn_2019/2/1/11193087.tif', 'hash': 'ea411a0f9529b173d0ecd719782f7a93d323d8bc061c6cb84326c22ca5d7273a', 'file_size': 34120},
 #   {'file': '11194577.tif', 'rel_path': 'dummy_path', 'path': '/mnt/ahpn/misha_test/ahpn_2019/2/1/11194577.tif', 'hash': '5a26bcda9b9029b2e9080feeab708ddbf90b752fe61ec1079b92769cca2bef98', 'file_size': 32518}
 # ]
+
+# =====================================
+# FUNCTIONS
+# =====================================
 
 # Takes file path to existing manifest csv
 # Converts Windows file paths to Unix style
@@ -59,9 +65,8 @@ def get_path_root(path):
 
   return path_start.group()
 
-# This is a rip-off of functions from calculate_hash_values repo.
-# Modifications: Returns list of lists, not csv.
-# Calculates sha-256 (not md5) to conform to existing manifests for AHPN.
+# Takes a file path.
+# Returns a list of lists with its sha-256 hash value and file size (bytes).
 def hash_file(file_path):
     hash = hashlib.sha256()
     buffer_size = 65536
@@ -83,7 +88,6 @@ def hash_file(file_path):
     return hash_value
 
 # Takes file path to new files directory (2019 disk)
-# Run get file hash values
 # Uses existing manifest path to determine root of new manifest path (so they're comparable)
 # Returns list of dictionaries with file name, its absolute path, sha-256 hash value, and file size
 def calculate_new_manifest(new_files_root_dir, existing_manifest_list):
@@ -181,6 +185,10 @@ def write_list_to_csv(list, name):
           out_row.append(row['file_size'])
         writer.writerow(out_row)
 
+# =====================================
+# EXECUTE
+# =====================================
+
 # Step 1:
 # Change existing manifest file's paths to unix format
 # and make convert csv to list
@@ -188,11 +196,9 @@ existing_manifest_list = unixify_existing_manifest(existing_manifest_csv_path)
 
 # Step 2:
 # Calculate hash values for new files and create a list
-# TODO this step is long on my local machine; use DUMMY DATA above for simple testing
-new_manifest_list = calculate_new_manifest(new_files_dir, existing_manifest_list)
-
-# Step 2b:
 # Write new_manifest_list to csv for future reference
+# NOTE: This step is long on my local machine; use DUMMY DATA above for simple testing
+new_manifest_list = calculate_new_manifest(new_files_dir, existing_manifest_list)
 write_list_to_csv(new_manifest_list, 'new_manifest_list')
 print('new manifest list', new_manifest_list[0])
 
