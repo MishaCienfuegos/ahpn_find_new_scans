@@ -6,9 +6,13 @@ import re
 from sysconfig import get_path
 import time
 
+# File path to manifest (.csv) for materials already written to tape
 existing_manifest_csv_path = 'test_files/2_1_2018.csv'
+
+# File path to directory containing most recent submission from AHPN
 new_files_dir = '../../../../../ahpn/misha_test/ahpn_2019/2/1'
 
+# TODO DUMMY DATA FOR TESTING PURPOSES, DELETE
 # new_manifest_list = [
 #   {'file': '17427196.tif', 'rel_path': 'dummy_path', 'path': '2/1/17427196.tif', 'hash': 'ea756afc8bb793d9dda6b6ef8086c62f2065a295c59bc95680eed5d53d6b4c68', 'file_size': 50545},
 #   {'file': '17427197.tif', 'rel_path': 'dummy_path', 'path': '2/1/17427197.tif', 'hash': 'b3f35eda4bbbf5ed40adbba4104e584969c16332df846a2f289dcad6f5380898', 'file_size': 131168},
@@ -123,13 +127,13 @@ def find_matches(existing_manifest_list, new_manifest_list):
     path_1 = row['path']
 
     # Compare to each row in new_manifest_list
+    # NOTE: A match has the same hash value AND same file path
     for row in new_manifest_list:
       hash_2 = row['hash']
       path_2 = row['path']
       file_name_2 = row['file']
 
       # If match found, create match list and append match to matches list
-      # A match has the same hash value AND same file path
       if hash_1 == hash_2 and path_1 == path_2:
           match = {
             'hash': hash_1, 
@@ -156,7 +160,7 @@ def subtract_lists(new_manifest_list, match_list):
 # Writes path and hash to csv, as well as file name and size, if available
 def write_list_to_csv(list, name):
   timestamp = time.strftime("%Y%m%d-%H%M%S")
-  output_file_name = 'aphn-' + name + '-' + timestamp + '.csv'
+  output_file_name = 'aphn_' + name + '-' + timestamp + '.csv'
 
   # If no matches found, do not write csv, return message
   if len(list) <= 0:
@@ -184,7 +188,7 @@ existing_manifest_list = unixify_existing_manifest(existing_manifest_csv_path)
 
 # Step 2:
 # Calculate hash values for new files and create a list
-# TODO this step is long on my local machine; use dummy data above for simple testing
+# TODO this step is long on my local machine; use DUMMY DATA above for simple testing
 new_manifest_list = calculate_new_manifest(new_files_dir, existing_manifest_list)
 
 # Step 2b:
