@@ -1,4 +1,4 @@
-# ahpn_copy_new_scans
+# ahpn_find_new_scans
 
 Creates a list of files to be copied and written to tape from new AHPN submission
 
@@ -20,3 +20,5 @@ For each item, the copy list contains:
 - file size (bytes)
 
 The script also creates a CSV of the matches found between the existing manifest and the new: `ahpn_match_list-<timestamp>.csv`. This list can be used to confirm these files have been written to tape.
+
+NOTE: This script checks both the hash value and file path to determine if the item should be copied. A file is added to the copy list if a match for both is not found in the existing manifest. See code comments for the functions `find_matches` and `subtract_lists`.
