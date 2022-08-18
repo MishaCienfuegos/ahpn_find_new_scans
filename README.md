@@ -19,4 +19,4 @@ For each item, the copy list contains:
 - file name
 - file size (bytes)
 
-The script also creates a CSV of the matches found between the existing manifest and the new: `ahpn_match_list-<timestamp>.csv`
+The script also creates a CSV of the matches found between the existing manifest and the new: `ahpn_match_list-<timestamp>.csv`. This list can be used to confirm these files have been written to tape.
