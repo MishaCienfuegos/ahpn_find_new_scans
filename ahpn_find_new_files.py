@@ -6,13 +6,26 @@ import re
 from sysconfig import get_path
 import time
 
-# TODO add args, not hardcoded file paths
+# Define arguments to be passed to script
+# Input: -i is the root file path (required)
+# Output: -o is the file path for the output .csv file, default is current working directory (optional)
+
+parser = argparse.ArgumentParser(description='Creates a list of files to be copied and written to tape from new AHPN submission')
+parser.add_argument('-old', '--old_manifest', help='File path to existing manifest', action='store', dest='old', required=True)
+parser.add_argument('-new', '--new_directory', help='Directory containing most recent submission from AHPN', action='store', dest='new', nargs='?', default=os.getcwd())
+
+args = parser.parse_args()
+
+print('old arg:', args.old)
+print('new arg:', args.new)
 
 # File path to manifest (.csv) for materials already written to tape
-existing_manifest_csv_path = 'test_files/2_1_2018.csv'
+# e.g., 'test_files/2_1_2018.csv'
+existing_manifest_csv_path = args.old
 
 # File path to directory containing most recent submission from AHPN
-new_files_dir = '../../../../../ahpn/misha_test/ahpn_2019/2/1'
+# e.g., '../../../../../ahpn/misha_test/ahpn_2019/2/1'
+new_files_dir = args.new
 
 # TODO DUMMY DATA FOR TESTING PURPOSES, DELETE
 # new_manifest_list = [
@@ -209,7 +222,7 @@ if match_list:
   print('match list:', match_list[0])
   write_list_to_csv(match_list, 'match_list')
 
-# TODO this is for testing; copy list should equal length difference for "real" data
+# NOTE this is for testing; copy list should equal length difference for "real" data
 new_manifest_length = len(new_manifest_list)
 match_list_length = len(match_list)
 list_difference = new_manifest_length - match_list_length
