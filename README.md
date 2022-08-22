@@ -5,7 +5,7 @@ Creates a list of files to be copied and written to tape from new AHPN submissio
 ## USE
 To run this script:
 
-`python ahpn_find_new_files.py`
+`python ahpn_find_new_files.py -old <file-path-of-existing-ahpn-manifest.csv> -new <file-path-of-directory-with-new-ahpn-scans>`
 
 ## ABOUT
 This script identifies AHPN materials that have not already been written to tape from previous material submissions. It calculates sha-256 hash values for all newly submitted materials and creates a manifest: `ahpn_new_manifest_list-<timestamp>.csv`
