@@ -6,7 +6,6 @@ import re
 from sysconfig import get_path
 import time
 
-# TODO add args, not hardcoded file paths
 # Define arguments to be passed to script
 # Input: -i is the root file path (required)
 # Output: -o is the file path for the output .csv file, default is current working directory (optional)
@@ -223,7 +222,7 @@ if match_list:
   print('match list:', match_list[0])
   write_list_to_csv(match_list, 'match_list')
 
-# TODO this is for testing; copy list should equal length difference for "real" data
+# NOTE this is for testing; copy list should equal length difference for "real" data
 new_manifest_length = len(new_manifest_list)
 match_list_length = len(match_list)
 list_difference = new_manifest_length - match_list_length
