@@ -22,3 +22,12 @@ For each item, the copy list contains:
 The script also creates a CSV of the matches found between the existing manifest and the new: `ahpn_match_list-<timestamp>.csv`. This list can be used to confirm these files have been written to tape.
 
 NOTE: This script checks both the hash value and file path to determine if the item should be copied. A file is added to the copy list if a match for both is not found in the existing manifest. See code comments for the functions `find_matches` and `subtract_lists`.
+
+This script is intended as Step 1 in a two-step process:
+1. Create new manifest and identify items to copy
+2. Copy
+
+See this [Identifying & Copying New Scans](https://wikis.utexas.edu/pages/viewpage.action?pageId=205204519) wiki for the previous workflow using Open Refine, including steps for copying the new materials.
+
+Note also that calculating the hashes to create a manifest for the new scans requires some computational power. A standard machine should be adequate for subfolders, but to create a manifest for the whole drive, consider using a more-powerful-than-average machine.
+
